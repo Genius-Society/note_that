@@ -1,1 +1,9 @@
-__pycache__/*
+.idea/
+.vscode/
+workdir/mathjax-full/
+workdir/res.html
+workdir/pre/mma2sympy_input.txt
+workdir/pre/mma2sympy_output.py
+pre.nb
+*__pycache__*
+test.*
