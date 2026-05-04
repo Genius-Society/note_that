@@ -5,7 +5,7 @@ from sympy.core.numbers import Rational
 
 EN_US = os.getenv("LANG") != "zh_CN.UTF-8"
 ZH2EN = {
-    "# “注意到”证明法比较大小": "# Compare sizes by 'Note that' proof",
+    "“注意到”证明法比较大小": "Compare sizes by 'Note that' proof",
     "比较 e^(m/n) 与 u/v 大小": "Compare e^(m/n) and u/v",
     "分母不能为 0": "The denominator cannot be 0",
     "比较 π^n 与 p/q 大小": "Compare π^n and p/q",
@@ -124,98 +124,95 @@ def infer_pin(n: int, p, q):
     return status, proof
 
 
-if __name__ == "__main__":
-    os.chdir(os.path.dirname(__file__))
-    for file_name in os.listdir("solutions"):
+def main():
+    for file_name in os.listdir(os.path.join(os.path.dirname(__file__), "solutions")):
         if not file_name.endswith(".py"):
             continue
 
         __import__(f"solutions.{file_name[:-3]}")
 
-    with gr.Blocks() as demo:
-        gr.Markdown(_L("# “注意到”证明法比较大小"))
-        with gr.Tabs():
-            with gr.TabItem("π"):
-                gr.Interface(
-                    fn=infer_pi,
-                    inputs=[
-                        gr.Number(label="p", value=314),
-                        gr.Number(label="q", value=100),
-                    ],
-                    outputs=[
-                        gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
-                        gr.Markdown(
-                            value=_L("#### 证明结果"),
-                            buttons=["copy"],
-                            container=True,
-                            min_height=122,
-                        ),
-                    ],
-                    title=_L("比较 π 与 p/q 大小"),
-                    flagging_mode="never",
-                )
+    return gr.TabbedInterface(
+        interface_list=[
+            gr.Interface(
+                fn=infer_pi,
+                inputs=[
+                    gr.Number(label="p", value=314),
+                    gr.Number(label="q", value=100),
+                ],
+                outputs=[
+                    gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
+                    gr.Markdown(
+                        value=_L("#### 证明结果"),
+                        buttons=["copy"],
+                        container=True,
+                        min_height=122,
+                    ),
+                ],
+                description=_L("比较 π 与 p/q 大小"),
+                flagging_mode="never",
+            ),
+            gr.Interface(
+                fn=infer_e,
+                inputs=[
+                    gr.Number(label="p", value=2718),
+                    gr.Number(label="q", value=1000),
+                ],
+                outputs=[
+                    gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
+                    gr.Markdown(
+                        value=_L("#### 证明结果"),
+                        buttons=["copy"],
+                        container=True,
+                        min_height=122,
+                    ),
+                ],
+                description=_L("比较 e 与 p/q 大小"),
+                flagging_mode="never",
+            ),
+            gr.Interface(
+                fn=infer_eq,
+                inputs=[
+                    gr.Number(label="m", value=3),
+                    gr.Number(label="n", value=4),
+                    gr.Number(label="u", value=2117),
+                    gr.Number(label="v", value=1000),
+                ],
+                outputs=[
+                    gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
+                    gr.Markdown(
+                        value=_L("#### 证明结果"),
+                        buttons=["copy"],
+                        container=True,
+                        min_height=122,
+                    ),
+                ],
+                description=_L("比较 e^(m/n) 与 u/v 大小"),
+                flagging_mode="never",
+            ),
+            gr.Interface(
+                fn=infer_pin,
+                inputs=[
+                    gr.Number(label="n", value=3, step=1),
+                    gr.Number(label="p", value=31),
+                    gr.Number(label="q", value=1),
+                ],
+                outputs=[
+                    gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
+                    gr.Markdown(
+                        value=_L("#### 证明结果"),
+                        buttons=["copy"],
+                        container=True,
+                        min_height=122,
+                    ),
+                ],
+                description=_L("比较 π^n 与 p/q 大小"),
+                flagging_mode="never",
+            ),
+        ],
+        tab_names=["π", "e", "e^q", "π^n"],
+        title=_L("“注意到”证明法比较大小"),
+    )
 
-            with gr.TabItem("e"):
-                gr.Interface(
-                    fn=infer_e,
-                    inputs=[
-                        gr.Number(label="p", value=2718),
-                        gr.Number(label="q", value=1000),
-                    ],
-                    outputs=[
-                        gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
-                        gr.Markdown(
-                            value=_L("#### 证明结果"),
-                            buttons=["copy"],
-                            container=True,
-                            min_height=122,
-                        ),
-                    ],
-                    title=_L("比较 e 与 p/q 大小"),
-                    flagging_mode="never",
-                )
 
-            with gr.TabItem("e^q"):
-                gr.Interface(
-                    fn=infer_eq,
-                    inputs=[
-                        gr.Number(label="m", value=3),
-                        gr.Number(label="n", value=4),
-                        gr.Number(label="u", value=2117),
-                        gr.Number(label="v", value=1000),
-                    ],
-                    outputs=[
-                        gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
-                        gr.Markdown(
-                            value=_L("#### 证明结果"),
-                            buttons=["copy"],
-                            container=True,
-                            min_height=122,
-                        ),
-                    ],
-                    title=_L("比较 e^(m/n) 与 u/v 大小"),
-                    flagging_mode="never",
-                )
-
-            with gr.TabItem("π^n"):
-                gr.Interface(
-                    fn=infer_pin,
-                    inputs=[
-                        gr.Number(label="n", value=3, step=1),
-                        gr.Number(label="p", value=31),
-                        gr.Number(label="q", value=1),
-                    ],
-                    outputs=[
-                        gr.Textbox(label=_L("状态栏"), buttons=["copy"]),
-                        gr.Markdown(
-                            value=_L("#### 证明结果"),
-                            buttons=["copy"],
-                            container=True,
-                            min_height=122,
-                        ),
-                    ],
-                    title=_L("比较 π^n 与 p/q 大小"),
-                    flagging_mode="never",
-                )
-
-    demo.launch(css="#gradio-share-link-button-0 { display: none; }", ssr_mode=False)
+if __name__ == "__main__":
+    main().launch(css="#gradio-share-link-button-0 { display: none; }", ssr_mode=False)
